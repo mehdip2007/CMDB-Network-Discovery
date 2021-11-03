@@ -2,8 +2,8 @@ from modules import connectivity_checker
 from modules import huawei_version_parser as hvp
 from modules import Ssh
 
-user = "cmdb"
-pwd = "arian#%FD20_20a"
+user = "user"
+pwd = "pass"
 
 
 pinger = connectivity_checker.Availability()
