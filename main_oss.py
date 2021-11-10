@@ -1,10 +1,10 @@
 import os
 from modules import huawei_oss as oss
 
-ftp_server = '10.130.200.133'
+ftp_server = "ftpserver_ip"
 username = "ftpuser"
-passwd = "Changeme_123"
-ftp_directory = "/opt/oss/server/var/fileint/cm/InvtTimerExport"
+passwd = "password"
+ftp_directory = "/path/to/ftp/folder"
 
 oss.get_xmls(username, passwd, ftp_server, ftp_directory)
 
