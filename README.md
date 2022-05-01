@@ -1,5 +1,5 @@
-# Huawei_Network_Discovery
-This project meant to use ssh and execute related commands and the provide a CSV 
+# Network_Discovery
+This project meant to use ssh to connect to the router such as CISCO, Huawei, Juniper and execute related commands to parse the output and the provide a CSV also insert it into JIRA insight inventory.
 
 # Packages
 make sure the followng packages were used in the script.
