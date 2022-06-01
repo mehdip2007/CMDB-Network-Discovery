@@ -1,8 +1,7 @@
-from netmiko import ConnectHandler
-
-from modules.cisco_inventory_parser import inventory_parser
-from modules.cisco_ip_int_parser import ip_int_parser
-from modules.cisco_version_parser import version_parser
+from modules.init_packages import netmiko
+from . import cisco_version
+from . import cisco_ip_init
+from . import cisco_inventory
 
 
 class Router:
@@ -21,24 +20,24 @@ class Router:
             'port': 22,          # optional, defaults to 22
         }
 
-    def get_version(self, command):
-        with ConnectHandler(**self.device_info) as net_connect:
+    def get_version(self, command, cisco_type):
+        with netmiko.ConnectHandler(**self.device_info) as net_connect:
             # Use TextFSM to retrieve structured data
             # output = net_connect.send_command(command, use_textfsm=True)
             result = net_connect.send_command(command)
 
-        version_parser(result)
+        cisco_version.version_parser(result, cisco_type, self.host)
 
-    def get_ip_init(self, command):
-        with ConnectHandler(**self.device_info) as net_connect:
+    def get_ip_init(self, command, cisco_type):
+        with netmiko.ConnectHandler(**self.device_info) as net_connect:
             prompt = net_connect.find_prompt()
             result = net_connect.send_command(command)
 
-        ip_int_parser(result, prompt, self.host)
+        cisco_ip_init.ip_init_parser(result, prompt, cisco_type, self.host)
 
-    def get_inventory(self, command):
-        with ConnectHandler(**self.device_info) as net_connect:
+    def get_inventory(self, command, cisco_type):
+        with netmiko.ConnectHandler(**self.device_info) as net_connect:
             prompt = net_connect.find_prompt()
             result = net_connect.send_command(command)
 
-        inventory_parser(result, prompt, self.host)
+        cisco_inventory.inventory_parser(result, prompt, cisco_type, self.host)

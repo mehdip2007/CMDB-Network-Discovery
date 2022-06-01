@@ -1,0 +1,89 @@
+from modules.init_packages import pandas as pd
+from modules.init_packages import os
+from modules.init_packages import Path
+from . import cisco_regex_dict
+
+cwd = os.getcwd()
+path = f"{cwd}/version"
+
+# Check whether the specified path exists or not
+isExist = os.path.exists(path)
+if not isExist:
+    # Create a new directory because it does not exist
+    os.makedirs(path)
+    print(f"The directory {path} is created!")
+else:
+    # os.chdir(f"../{cwd}")
+    os.chdir(cwd)
+
+
+def version_parser(output, cisco_type, host):
+
+    Path(f"{path}/{cisco_type}").mkdir(parents=True, exist_ok=True)
+    def data_to_csv(dictionary):
+        df = pd.DataFrame.from_dict(dictionary, orient='index').T
+        csv_result = '{}/{}/{}_Result.csv'.format(path, cisco_type, host)
+        df.to_csv(csv_result, index=False)
+
+    data_dictionary = {}
+    ios_software_list = []
+    name_list = []
+    uptime_list = []
+    version_list = []
+    serial_list = []
+    model_list = []
+    memory_list = []
+    cpu_clock_list = []
+    cpu_core_list = []
+    cpu_model_list = []
+    ios_release_list = []
+    mac_list = []
+    # ip_list = {host}
+
+    for key, regex in cisco_regex_dict.version_regex.items():
+        matches = regex.findall(output)
+        if matches:
+            if key == "IOS Software" or key == "Nexus" or key == 'IOS Software2':
+                ios_software_list.append(matches[0])
+            if key == "Name" or key == "Nexus Name" or key == "Name2" or key == "Name3" or key == "Name4":
+                name_list.append(matches[0])
+            if key == "Uptime":
+                uptime_list.append(matches[0])
+            if key == "Version" or key == "Nexus Version":
+                version_list.append(matches[0])
+            if key == 'Serial':
+                serial_list.append(matches[0])
+            if key == 'Model':
+                model_list.append(matches[0])
+            if key == 'Memory':
+                memory_list.append(matches[0])
+            if key == 'CPU Clock' or key == 'CPU Clock2' or key == 'CPU Clock3':
+                cpu_clock_list.append(matches[0])
+            if key == 'CPU Core' or key == 'CPU Core2':
+                cpu_core_list.append(matches[0])
+            if key == 'CPU Model' or key == "Nexus CPU":
+                cpu_model_list.append(matches[0])
+            if key == 'IOS Release':
+                ios_release_list.append(matches[0])
+            if key == 'MAC':
+                mac_list.append(matches[0])
+            # if key == 'IP':
+            #     ip_list.append(matches[0])
+
+    data_dictionary['CISCO IOS Software'] = [ios_software_list[0]] if len(ios_software_list) > 1 else ios_software_list
+    data_dictionary['Hostname'] = [name_list[0]] if len(name_list) > 1 else name_list
+    data_dictionary['IP Address'] = [host]
+    data_dictionary['Uptime'] = uptime_list
+    data_dictionary['Cisco IOS Version'] = version_list
+    data_dictionary['Serial Number'] = serial_list
+    data_dictionary['Device Model'] = model_list
+    data_dictionary['Memory'] = memory_list
+    data_dictionary['CPU Clock rate'] = cpu_clock_list
+    data_dictionary['CPU Core'] = cpu_core_list
+    data_dictionary['CPU Model'] = cpu_model_list
+    data_dictionary['IOS Release Software'] = ios_release_list
+    data_dictionary['MAC Address'] = mac_list
+
+    print(data_dictionary)
+    data_to_csv(data_dictionary)
+    # return data_dictionary
