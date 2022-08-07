@@ -1,12 +1,14 @@
-# Network_Discovery
-This project meant to use ssh to connect to the router such as CISCO, Huawei, Juniper and execute related commands to parse the output and the provide a CSV also insert it into JIRA insight inventory.
+# NWG CMDB
+The code uses paramiko for ssh connection to the routers and execute commands then fetch the stdout for generating csv.
 
-Also using IPAM for managin the IP which related to our router with diffrent VRFs.
 
-# Packages
-make sure the followng packages were used in the script.
+The following package are used.
+``` 
+paramiko
+pandas
+socket
+re
+json
 
-```
-paramiko, json, pandas, socket, selenium
 ```
 
